@@ -2,6 +2,8 @@
 
 > This setup is used and tested in airflow 1.10.10. If you are setting up airflow for the first time use 2.x versions which has lot more features and is stable. It also comes with helm chart
 
+> [VS] UPDATE: upgraded to python 3.7 and airflow 2.3.0 
+
 The setup files are copied directly from airflow's repo and modified to fit the requirements.
 
 One major change is instead of building the docker image from source, we use `pip` to install airflow
@@ -10,10 +12,19 @@ One major change is instead of building the docker image from source, we use `pi
 
 ```
 cd scripts/docker
-docker build -t airflow .
+docker build -t airflow-poc .
 ```
-
-> Push the image to your favorite registry and get the URL
+> Tag image to deploy to GitHub Container Repo
+```
+# get IMAGE_ID
+docker images | grep airflow-poc
+#  tag
+docker tag IMAGE_ID ghcr.io/USER/airflow-poc:latest
+```
+> Push the image to GitHub
+```
+docker push ghcr.io/USER/airflow-poc:latest
+```
 
 ## Deploy in kubernetes
 

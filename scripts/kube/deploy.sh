@@ -19,8 +19,8 @@
 
 set -x
 
-AIRFLOW_IMAGE=gcr.io/deeplearning-181416/airflow-cdh:0.0.1
-AIRFLOW_TAG=0.0.1
+AIRFLOW_IMAGE=gcr.io/smvlada/airflow-poc:latest
+AIRFLOW_TAG=2.3.0
 DIRNAME=$(cd "$(dirname "$0")"; pwd)
 TEMPLATE_DIRNAME=${DIRNAME}/templates
 BUILD_DIRNAME=${DIRNAME}/build
@@ -145,9 +145,8 @@ fi
 
 
 kubectl apply -f $DIRNAME/namespace.yaml
-kubectl config set-context --current --namespace=airflow-example 
+kubectl config set-context --current --namespace=airflow-poc
 
-# kubectl delete -f $DIRNAME/postgres.yaml
 # kubectl delete -f $BUILD_DIRNAME/airflow.yaml
 # kubectl delete -f $DIRNAME/secrets.yaml
 
@@ -155,7 +154,6 @@ set -e
 
 kubectl apply -f $DIRNAME/secrets.yaml
 kubectl apply -f $BUILD_DIRNAME/configmaps.yaml
-kubectl apply -f $DIRNAME/postgres.yaml
 kubectl apply -f $DIRNAME/volumes.yaml
 kubectl apply -f $BUILD_DIRNAME/airflow.yaml
 
@@ -167,8 +165,7 @@ do
   PODS=$(kubectl get pods | awk 'NR>1 {print $0}')
   echo "$PODS"
   NUM_AIRFLOW_READY=$(echo $PODS | grep airflow | awk '{print $2}' | grep -E '([0-9])\/(\1)' | wc -l | xargs)
-  NUM_POSTGRES_READY=$(echo $PODS | grep postgres | awk '{print $2}' | grep -E '([0-9])\/(\1)' | wc -l | xargs)
-  if [ "$NUM_AIRFLOW_READY" == "1" ] && [ "$NUM_POSTGRES_READY" == "1" ]; then
+  if [ "$NUM_AIRFLOW_READY" == "1" ]; then
     PODS_ARE_READY=1
     break
   fi

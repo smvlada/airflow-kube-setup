@@ -21,7 +21,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  namespace: airflow-example
+  namespace: airflow-poc
   name: airflow
 rules:
 - apiGroups: [""] # "" indicates the core API group
@@ -36,11 +36,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: airflow
-  namespace: airflow-example
+  namespace: airflow-poc
 subjects:
 - kind: ServiceAccount
   name: airflow # Name of the ServiceAccount
-  namespace: airflow-example
+  namespace: airflow-poc
 roleRef:
   kind: Role # This must be Role or ClusterRole
   name: airflow # This must match the name of the Role or ClusterRole you wish to bind to
@@ -50,11 +50,11 @@ roleRef:
 # kind: ClusterRoleBinding
 # metadata:
 #   name: admin-rbac
-#   namespace: airflow-example
+#   namespace: airflow-poc
 # subjects:
 #   - kind: ServiceAccount
 #     name: airflow
-#     namespace: airflow-example
+#     namespace: airflow-poc
 # roleRef:
 #   kind: ClusterRole
 #   name: cluster-admin
@@ -64,7 +64,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: airflow
-  namespace: airflow-example
+  namespace: airflow-poc
 spec:
   replicas: 1
   template:

@@ -15,7 +15,7 @@
 #  specific language governing permissions and limitations      *
 #  under the License.                                           *
 
-FROM python:3.6-slim
+FROM python:3.7-slim
 
 # install deps
 RUN apt-get update -y && apt-get install -y \

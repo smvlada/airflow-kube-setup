@@ -159,7 +159,7 @@ data:
     worker_container_tag = {{AIRFLOW_TAG}}
     worker_container_image_pull_policy = Always
     worker_service_account_name = airflow
-    namespace = airflow-example
+    namespace = airflow-poc
     delete_worker_pods = True
     dags_in_image = False
     git_repo = https://github.com/{{CONFIGMAP_GIT_REPO}}.git
