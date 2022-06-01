@@ -28,9 +28,10 @@ RUN apt-get update -y && apt-get install -y \
 
 RUN pip install --upgrade pip
 
-RUN pip install apache-airflow==1.10.10
+RUN pip install apache-airflow==2.3.0
 RUN pip install 'apache-airflow[kubernetes]'
-RUN pip install 'apache-airflow[postgres]'
+# Postgre will be external
+#RUN pip install 'apache-airflow[postgres]'
 
 COPY airflow-test-env-init.sh /tmp/airflow-test-env-init.sh
 
