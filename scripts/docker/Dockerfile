@@ -29,9 +29,8 @@ RUN apt-get update -y && apt-get install -y \
 RUN pip install --upgrade pip
 
 RUN pip install apache-airflow==2.3.0
-RUN pip install 'apache-airflow[kubernetes]'
-# Postgre will be external
-#RUN pip install 'apache-airflow[postgres]'
+RUN pip install 'apache-airflow[kubernetes,apache-airflow-providers-postgres,apache-airflow-providers-amazon]'
+RUN pip install psycopg2-binary
 
 COPY airflow-test-env-init.sh /tmp/airflow-test-env-init.sh
 

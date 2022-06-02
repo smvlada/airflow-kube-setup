@@ -8,22 +8,40 @@ The setup files are copied directly from airflow's repo and modified to fit the 
 
 One major change is instead of building the docker image from source, we use `pip` to install airflow
 
+## K8S setup
+### Prep GitHub local env
+> You need to export GitHub access token PAT to $GH_SERVICE_ACCOUNT. You will need to export your GitHub user to $GH_USER.
+> It is recommended to create separate GH access token for serviceaccount with  
+```
+kubectl create secret docker-registry ghcr-service-account --docker-server=ghcr.io --docker-username=$GH_USER --docker-password=$GH_SERVICE_ACCOUNT
+```
+# Steps to build & deploy new image
+
 ## Create Docker Image
 
 ```
 cd scripts/docker
-docker build -t airflow-poc .
+docker build -t airflow .
 ```
-> Tag image to deploy to GitHub Container Repo
+> Tag image to deploy to GitHub Container Repo (ghcr.io)
 ```
 # get IMAGE_ID
-docker images | grep airflow-poc
+docker images | grep airflow
 #  tag
-docker tag IMAGE_ID ghcr.io/USER/airflow-poc:latest
+docker tag IMAGE_ID ghcr.io/$GH_USER/airflow:2.3.0
 ```
-> Push the image to GitHub
+> Login to ghcr.io
 ```
-docker push ghcr.io/USER/airflow-poc:latest
+ echo $GH_SERVICE_ACCOUNT | docker login ghcr.io -u $GH_USER --password-stdin
+```
+> Push the image to ghcr.io
+```
+docker push ghcr.io/$GH_USER/airflow:2.3.0
+```
+> Check details of image on ghcr.io
+```
+# first you need to export your GitHub token to $GH_SERVICE_ACCOUNT and then:
+ docker run --rm quay.io/skopeo/stable list-tags --creds=$GH_USER:$GH_SERVICE_ACCOUNT docker://ghcr.io/$GH_USER/airflow
 ```
 
 ## Deploy in kubernetes

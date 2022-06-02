@@ -21,8 +21,6 @@ set -x
 
 cd /usr/local/lib/python3.7/site-packages/airflow && \
 cp -R example_dags/* /root/airflow/dags/ && \
-cp -R contrib/example_dags/example_kubernetes_*.py /root/airflow/dags/ && \
-cp -a contrib/example_dags/libs /root/airflow/dags/ && \
-airflow initdb && \
+airflow db init && \
 alembic upgrade heads && \
-(airflow create_user --username airflow --lastname airflow --firstname jon --email airflow@apache.org --role Admin --password airflow || true) 
+(airflow users  create --role Admin --username adm____ --email admbubble --firstname admbubble --lastname admbubble --password 'adm____' || true)

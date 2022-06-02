@@ -19,11 +19,15 @@
 
 set -x
 
-AIRFLOW_IMAGE=gcr.io/smvlada/airflow-poc:latest
+AIRFLOW_IMAGE=ghcr.io/smvlada/airflow
 AIRFLOW_TAG=2.3.0
+AIRFLOW_HOME=$(echo $AIRFLOW_HOME)
 DIRNAME=$(cd "$(dirname "$0")"; pwd)
 TEMPLATE_DIRNAME=${DIRNAME}/templates
 BUILD_DIRNAME=${DIRNAME}/build
+
+echo "AIRFLOW_HOME: $(echo $AIRFLOW_HOME)"
+echo "AIRFLOW_HOME: $(echo "$AIRFLOW_HOME")"
 
 usage() {
     cat << EOF
@@ -134,18 +138,18 @@ ${SED_COMMAND} -i "s|{{CONFIGMAP_BRANCH}}|$CONFIGMAP_BRANCH|g" ${BUILD_DIRNAME}/
 ${SED_COMMAND} -i "s|{{CONFIGMAP_GIT_DAGS_FOLDER_MOUNT_POINT}}|$CONFIGMAP_GIT_DAGS_FOLDER_MOUNT_POINT|g" ${BUILD_DIRNAME}/configmaps.yaml
 ${SED_COMMAND} -i "s|{{CONFIGMAP_DAGS_VOLUME_CLAIM}}|$CONFIGMAP_DAGS_VOLUME_CLAIM|g" ${BUILD_DIRNAME}/configmaps.yaml
 
+${SED_COMMAND} "s|{{AIRFLOW_HOME}}|$AIRFLOW_HOME|g" \
+    ${TEMPLATE_DIRNAME}/volumes.template.yaml > ${BUILD_DIRNAME}/volumes.yaml
 
-cat ${BUILD_DIRNAME}/airflow.yaml
-cat ${BUILD_DIRNAME}/configmaps.yaml
+#cat ${BUILD_DIRNAME}/airflow.yaml
+#cat ${BUILD_DIRNAME}/configmaps.yaml
 
 # Fix file permissions
 if [[ "${TRAVIS}" == true ]]; then
   sudo chown -R travis.travis $HOME/.kube $HOME/.minikube
 fi
 
-
-kubectl apply -f $DIRNAME/namespace.yaml
-kubectl config set-context --current --namespace=airflow-poc
+kubectl config set-context --current
 
 # kubectl delete -f $BUILD_DIRNAME/airflow.yaml
 # kubectl delete -f $DIRNAME/secrets.yaml
@@ -154,7 +158,7 @@ set -e
 
 kubectl apply -f $DIRNAME/secrets.yaml
 kubectl apply -f $BUILD_DIRNAME/configmaps.yaml
-kubectl apply -f $DIRNAME/volumes.yaml
+kubectl apply -f $BUILD_DIRNAME/volumes.yaml
 kubectl apply -f $BUILD_DIRNAME/airflow.yaml
 
 # wait for up to 10 minutes for everything to be deployed

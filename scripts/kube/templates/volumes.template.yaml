@@ -27,7 +27,7 @@ spec:
   capacity:
     storage: 2Gi
   hostPath:
-    path: /airflow-dags/
+    path: {{AIRFLOW_HOME}}/dags/
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -50,7 +50,7 @@ spec:
   capacity:
     storage: 2Gi
   hostPath:
-    path: /airflow-logs/
+    path: {{AIRFLOW_HOME}}/logs_k8s/
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -63,25 +63,3 @@ spec:
     requests:
       storage: 2Gi
 ---
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: test-volume
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 2Gi
-  hostPath:
-    path: /airflow-dags/
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: test-volume
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 2Gi
