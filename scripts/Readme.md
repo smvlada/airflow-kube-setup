@@ -46,9 +46,9 @@ docker push ghcr.io/$GH_USER/airflow:2.3.0
 
 ## Deploy in kubernetes
 
-1. Find $IMAGE in the repository
-2. Find $TAG in the repository
-2. Change it with the docker image URL and tag respectively
+1. Find $AIRFLOW_IMAGE in the repository
+2. Find $AIRFLOW_TAG in the repository
+2. Change it with the docker image URL and tag respectively in deploy.sh
 
 ```
 cd scripts/

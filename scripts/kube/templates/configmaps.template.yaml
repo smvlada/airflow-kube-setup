@@ -22,7 +22,7 @@ data:
   airflow.cfg: |
     [core]
     dags_folder = {{CONFIGMAP_DAGS_FOLDER}}
-    executor = KubernetesExecutor
+    executor = LocalExecutor
     parallelism = 32
     load_examples = False
     plugins_folder = /root/airflow/plugins

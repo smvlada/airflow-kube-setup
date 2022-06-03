@@ -134,17 +134,26 @@ spec:
           mountPath: /root/airflow/dags
         - name: airflow-logs
           mountPath: /root/airflow/logs
+        - name: airflow-inbox
+          mountPath: /root/airflow/inbox
       volumes:
       - name: airflow-dags
-        persistentVolumeClaim:
-          claimName: airflow-dags
+        hostPath:
+          path: {{AIRFLOW_HOME}}/dags/
+#        persistentVolumeClaim:
+#          claimName: airflow-dags
       - name: airflow-dags-fake
         emptyDir: {}
       - name: airflow-dags-git
         emptyDir: {}
       - name: airflow-logs
-        persistentVolumeClaim:
-          claimName: airflow-logs
+        hostPath:
+          path: {{AIRFLOW_HOME}}/logs/
+#        persistentVolumeClaim:
+#          claimName: airflow-logs
+      - name: airflow-inbox
+        hostPath:
+          path: {{AIRFLOW_HOME}}/inbox/
       - name: airflow-configmap
         configMap:
           name: airflow-configmap
